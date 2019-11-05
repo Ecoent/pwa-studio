@@ -1,0 +1,50 @@
+.breadcrumbRoot {
+    position: relative;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+
+.breadcrumbListButton {
+    align-items: center;
+    border: 1px solid rgb(var(--venia-text));
+    border-radius: 4px;
+    display: flex;
+    font-size: 0.875rem;
+    padding: 0.25rem;
+    width: max-content;
+}
+
+.dropdown {
+    background: white;
+    border: 1px solid rgb(var(--venia-text));
+    border-radius: 4px;
+    display: block;
+    margin-right: 1rem;
+    padding-bottom: 1rem;
+    padding-right: 1rem;
+    position: absolute;
+    z-index: 3;
+
+    opacity: 0;
+    /* 30% seemed arbitrary but it matched the height of the dropdown button. Is there a better way? */
+    transform: translate3d(0, -30%, 0);
+    transition-duration: 192ms;
+    transition-timing-function: var(--venia-anim-out);
+    transition-property: opacity, transform, visibility;
+    visibility: hidden;
+}
+
+.dropdown_open {
+    composes: dropdown;
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition-duration: 224ms;
+    transition-timing-function: var(--venia-anim-in);
+    visibility: visible;
+}
+
+/* Add a divider with spacing for each breadcrumb in the dropdown. */
+.dropdown div:not(:last-child) {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgb(var(--venia-text));
+}
