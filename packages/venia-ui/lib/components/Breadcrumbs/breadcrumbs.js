@@ -9,9 +9,9 @@ const URL_SUFFIX = '.html';
 const sortCrumbs = (a, b) => a.category_level > b.category_level;
 
 // Generates the path for the category.
-const getPath = ({ category_url_path }) => {
-    if (category_url_path) {
-        return resourceUrl(`/${category_url_path}${URL_SUFFIX}`);
+const getPath = path => {
+    if (path) {
+        return resourceUrl(`/${path}${URL_SUFFIX}`);
     }
 
     // If there is no path this is just a dead link.
@@ -20,13 +20,20 @@ const getPath = ({ category_url_path }) => {
 
 /**
  * Breadcrumbs! Sorts and generates links for an array of breadcrumb data.
+ * By default the current category is _not_ a link but will be if a path is
+ * provided.
  *
  * @param {String} props.currentCategory name of the current category
- * @param {Array} props.data Breadcrumb data
+ * @param {String} props.currentPath path to the current category
+ * @param {Array} props.data An array of data containing category information
+ * for each breadcrumb.
  */
 const Breadcrumbs = props => {
     const classes = mergeClasses(defaultClasses, props.classes);
+
+    // data can be `null` which won't default destructure.
     const data = props.data || [];
+    const { currentCategory, currentPath } = props;
 
     const sortedData = useMemo(() => data.sort(sortCrumbs), [data]);
 
@@ -34,11 +41,11 @@ const Breadcrumbs = props => {
         () =>
             sortedData.map(category => ({
                 text: category.category_name,
-                path: getPath(category)
+                path: getPath(category.category_url_path)
             })),
         [sortedData]
     );
-    const divider = useMemo(() => <span className={classes.divider}>/</span>, [
+    const divider = useMemo(() => <span className={classes.divider}>></span>, [
         classes.divider
     ]);
 
@@ -56,6 +63,14 @@ const Breadcrumbs = props => {
         });
     }, [classes.link, divider, normalized]);
 
+    const lastCategory = currentPath ? (
+        <Link className={classes.link} to={getPath(currentPath)}>
+            {currentCategory}
+        </Link>
+    ) : (
+        <span className={classes.currentCategory}>{currentCategory}</span>
+    );
+
     return (
         <div className={classes.root}>
             <Link className={classes.link} to="/">
@@ -63,9 +78,7 @@ const Breadcrumbs = props => {
             </Link>
             {links}
             {divider}
-            <span className={classes.currentCategory}>
-                {props.currentCategory}
-            </span>
+            {lastCategory}
         </div>
     );
 };
