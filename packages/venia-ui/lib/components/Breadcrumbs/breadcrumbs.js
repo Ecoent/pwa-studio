@@ -2,6 +2,7 @@ import React, { Fragment, useMemo } from 'react';
 import { Link, resourceUrl } from '@magento/venia-drivers';
 import { mergeClasses } from '../../classify';
 import defaultClasses from './breadcrumbs.css';
+import { array, string } from 'prop-types';
 
 const URL_SUFFIX = '.html';
 
@@ -45,6 +46,7 @@ const Breadcrumbs = props => {
             })),
         [sortedData]
     );
+
     const divider = useMemo(() => <span className={classes.divider}>></span>, [
         classes.divider
     ]);
@@ -84,3 +86,9 @@ const Breadcrumbs = props => {
 };
 
 export default Breadcrumbs;
+
+Breadcrumbs.propTypes = {
+    currentCategory: string,
+    currentPath: string,
+    data: array
+};
